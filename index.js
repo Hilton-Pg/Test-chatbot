@@ -22,6 +22,10 @@ app.use(express.json());
 // Set up multer for file uploads
 const upload = multer({ dest: "uploads/" });
 
+app.get("/api/test",(req,res)=>{
+  res.send("working")
+})
+
 // Endpoint to upload and process PDFs
 app.post("/api/upload", upload.array("files", 10), async (req, res) => {
   try {
