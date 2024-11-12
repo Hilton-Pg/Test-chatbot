@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat PDF Application</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    #output {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      min-height: 50px;
+    }
+    #loader {
+      display: none;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Chat PDF Application</h1>
+  <input type="text" id="question" placeholder="Type your question here" style="width: 80%; padding: 8px;" />
+  <button onclick="askQuestion()">Ask</button>
+  <div id="loader">Loading...</div>
+  <div id="output"></div>
+
+  <script>
+    async function askQuestion() {
+      const question = document.getElementById('question').value;
+      if (!question) {
+        alert('Please enter a question.');
+        return;
+      }
+
+      // Show loader and clear output
+      document.getElementById('loader').style.display = 'block';
+      document.getElementById('output').innerText = '';
+
+      try {
+        const response = await fetch('http://localhost:4500/api/ask', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ question }),
+        });
+
+        const data = await response.json();
+        document.getElementById('output').innerText = data.answer;
+      } catch (error) {
+        console.log(error)
+        console.error('Error:', error);
+        document.getElementById('output').innerText = 'Error retrieving the answer.';
+      } finally {
+        // Hide loader
+        document.getElementById('loader').style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
